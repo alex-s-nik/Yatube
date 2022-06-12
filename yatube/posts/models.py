@@ -30,6 +30,8 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+        verbose_name='Пост'
+        verbose_name_plural='Посты'
 
     def __str__(self):
         return self.text[:FIRST_POST_CHARS]
@@ -39,6 +41,10 @@ class Group(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
+
+    class Meta:
+        verbose_name='Группа'
+        verbose_name_plural='Группы'
 
     def __str__(self):
         return self.title
@@ -59,6 +65,14 @@ class Comment(models.Model):
     )
     text = models.TextField(max_length=200, verbose_name='Текст комментария')
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name='Комментарий'
+        verbose_name_plural='Комментарии'
+
+    def __str__(self):
+        return f'{self.author.username} (к посту {self.post}): {self.text}'
+
 
 
 class Follow(models.Model):
