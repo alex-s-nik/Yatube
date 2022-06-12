@@ -80,7 +80,11 @@ class Follow(models.Model):
         unique_together = ('user', 'author',)
         constraints = [
             models.CheckConstraint(
-                name="impossible_follow_self",
-                check=~models.Q(user=models.F("author")),
+                name='impossible_follow_self',
+                check=~models.Q(user=models.F('author')),
             ),
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='selffollow'
+            )
         ]
