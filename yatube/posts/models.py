@@ -77,7 +77,6 @@ class Follow(models.Model):
     )
 
     class Meta:
-        unique_together = ('user', 'author',)
         constraints = [
             models.CheckConstraint(
                 name='impossible_follow_self',
