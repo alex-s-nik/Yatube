@@ -55,7 +55,7 @@ def group_posts(request, slug):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     user_posts = user.posts.all()
-    following = Follow.objects.filter(author=user).exists()
+    following = Follow.objects.filter(user=user).exists()
 
     page_obj = _get_page_obj(request, user_posts)
 
@@ -146,11 +146,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    authors = Follow.objects.values_list(
-        'author',
-        flat=True
-    ).filter(user=request.user)
-    posts = Post.objects.filter(author__in=authors)
+    posts = Post.objects.filter(author__following__user=request.user)
 
     page_obj = _get_page_obj(request, posts)
 
@@ -162,10 +158,10 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     author = User.objects.get(username=username)
-    try:
+    follow_link = Follow.objects.filter(user=request.user, author=author)
+    if not follow_link.exists():
         Follow.objects.create(user=request.user, author=author)
-    finally:
-        return redirect('posts:profile', username=username)
+    return redirect('posts:profile', username=username)
 
 
 @login_required
