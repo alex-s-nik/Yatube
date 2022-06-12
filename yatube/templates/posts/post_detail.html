@@ -3,7 +3,7 @@
 {% load user_filters %}
 
 {% block title %}
-Пост {{ post.text|truncatechars:30 }}
+  Пост {{ post.text|truncatechars:30 }}
 {% endblock %}
 
 {% block content %}
@@ -41,16 +41,18 @@
         <img class="card-img my-2" src="{{ im.url }}">
       {% endthumbnail %}
       <p>
-        {{ post.text }}
+        {{ post.text|linebreaksbr }}
       </p>
     </article>
-    <div class="col-md-6 offset-md-3">
-      <a href="{% url 'posts:post_edit' post.pk %}">
-        <button class="btn btn-primary">
-          Редактировать
-        </button>
-      </a>
-    </div>
+    {% if user == post.author %}
+      <div class="col-md-6 offset-md-3">
+        <a href="{% url 'posts:post_edit' post.pk %}">
+          <button class="btn btn-primary">
+            Редактировать
+          </button>
+        </a>
+      </div>
+    {% endif %}
     {% if user.is_authenticated %}
       <div class="card my-4">
         <h5 class="card-header">Добавить комментарий:</h5>

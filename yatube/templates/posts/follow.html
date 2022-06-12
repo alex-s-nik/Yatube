@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/switcher.html' with user=user follow=follow %}
   {% for post in page_obj %}
     <article>
     {% include 'posts/includes/post.html' %}
