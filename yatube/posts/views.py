@@ -56,7 +56,10 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     author_posts = author.posts.all()
     if request.user.is_authenticated:
-        following = Follow.objects.filter(user=request.user, author=author).exists()
+        following = Follow.objects.filter(
+            user=request.user,
+            author=author
+        ).exists()
     else:
         following = False
 
@@ -72,7 +75,10 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post.objects.prefetch_related('comments'), pk=post_id)
+    post = get_object_or_404(
+        Post.objects.prefetch_related('comments'),
+        pk=post_id
+    )
     comment_form = CommentForm(request.POST or None)
     context = {
         'post': post,
