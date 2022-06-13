@@ -53,14 +53,17 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    user_posts = user.posts.all()
-    following = Follow.objects.filter(user=user).exists()
+    author = get_object_or_404(User, username=username)
+    author_posts = author.posts.all()
+    if request.user.is_authenticated:
+        following = Follow.objects.filter(user=request.user, author=author).exists()
+    else:
+        following = False
 
-    page_obj = _get_page_obj(request, user_posts)
+    page_obj = _get_page_obj(request, author_posts)
 
     context = {
-        'profile_user': user,
+        'profile_user': author,
         'page_obj': page_obj,
         'following': following,
     }
@@ -69,12 +72,10 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    comments = post.comments.all()
+    post = get_object_or_404(Post.objects.prefetch_related('comments'), pk=post_id)
     comment_form = CommentForm(request.POST or None)
     context = {
         'post': post,
-        'comments': comments,
         'comment_form': comment_form
     }
     template = 'posts/post_detail.html'

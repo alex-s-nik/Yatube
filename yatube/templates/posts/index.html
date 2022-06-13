@@ -7,7 +7,7 @@
 
 {% block content %}
   {% cache 20 index_page page_obj %}
-    {% include 'posts/includes/switcher.html' with user=user follow=follow %}
+    {% include 'posts/includes/switcher.html' with index=True follow=False %}
     {% for post in page_obj %}
       <article>
         {% include 'posts/includes/post.html' %}
